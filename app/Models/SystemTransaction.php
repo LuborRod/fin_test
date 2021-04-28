@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Wallet extends Model
+class SystemTransaction extends Model
 {
     use HasFactory;
+
+    protected $table = 'system_balance';
 
     /**
      * The attributes that are mass assignable.
@@ -16,27 +18,17 @@ class Wallet extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
+        'transaction_id',
+        'amount',
         'current_balance',
-        'hash',
     ];
 
 
     /**
-     * The model's default values for attributes.
-     *
-     * @var array
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    protected $attributes = [
-        'current_balance' => 100,
-    ];
-
-
-    /**
-     * @return HasOne
-     */
-    public function user(): HasOne
+    public function usersTransaction(): HasOne
     {
-        return $this->hasOne(User::class);
+        return $this->hasOne(UsersTransaction::class);
     }
 }
