@@ -37,6 +37,8 @@ class UsersTransaction extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     const STATUS_PENDING = 1;
     const STATUS_SUCCESS = 2;
     const STATUS_FAILED = 3;

@@ -19,7 +19,8 @@ class SystemTransaction extends Model
 {
     use HasFactory;
 
-    protected $table = 'system_balance';
+    public $timestamps = false;
+    protected $table = 'system_transactions';
 
     /**
      * The attributes that are mass assignable.
@@ -27,7 +28,7 @@ class SystemTransaction extends Model
      * @var array
      */
     protected $fillable = [
-        'transaction_id',
+        'user_transaction_id',
         'amount',
         'current_balance',
     ];

@@ -16,8 +16,12 @@ class TransactionController extends Controller
         $this->transferFundsService = $transferFundsService;
     }
 
-
-    public function store(TransactionRequest $transactionRequest)
+    /**
+     * @param TransactionRequest $transactionRequest
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
+    public function store(TransactionRequest $transactionRequest): \Illuminate\Http\JsonResponse
     {
         $transactionData = new TransactionDTO(
             $transactionRequest->input('sender_wallet'),
@@ -27,5 +31,7 @@ class TransactionController extends Controller
         );
 
         $this->transferFundsService->createOperation($transactionData);
+
+        return response()->json('OK', 201);
     }
 }

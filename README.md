@@ -22,7 +22,7 @@ After `make up` you will have 4 business_logic tables.
 4. system_transactions (Here we will store commission balance).
 
 1) Upon application start the database should be populated with sample data - 
-After `make up` you will get 3 users and 5 wallets to transfer funds between. All wallets have 10000 'coins'.
+After `make up` you will get 3 users and 6 wallets to transfer funds between. All wallets have 10000 'coins'.
 Minimal amount for transfer  100 coins. You can modify it in 'UserTransaction' constants.   
    
 These hashes(every wallet has unique hash) you need to make POST requests to api :
@@ -31,6 +31,7 @@ These hashes(every wallet has unique hash) you need to make POST requests to api
    - qPtljyeLz7 
    - FuvqtPKugf 
    - DOQli16WsW 
+   - DOQli27WsW 
 
 
 2) REST endpoint that can be used to transfer funds -

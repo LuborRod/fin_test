@@ -9,13 +9,13 @@ class TransactionDTO
     public string $senderWalletHash;
     public string $receiverWalletHash;
     public int $amount;
-    public string $commissionPayer;
+    public ?int $commissionPayer;
 
-    public function __construct(string $senderWalletHash, string $receiverWalletHash, int $amount, $commissionPayer = UsersTransaction::COMMISSION_PAYER_SENDER)
+    public function __construct(string $senderWalletHash, string $receiverWalletHash, int $amount, $commissionPayer = null)
     {
         $this->senderWalletHash = $senderWalletHash;
         $this->receiverWalletHash = $receiverWalletHash;
         $this->amount = $amount;
-        $this->commissionPayer = $commissionPayer;
+        $this->commissionPayer = $commissionPayer ?? UsersTransaction::COMMISSION_PAYER_SENDER;
     }
 }

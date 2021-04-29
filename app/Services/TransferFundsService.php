@@ -3,57 +3,58 @@
 
 namespace App\Services;
 
-
 use App\DTO\TransactionDTO;
-use App\Repositories\Interfaces\WalletRepositoryInterface;
-use App\Repositories\Interfaces\SystemTransactionsRepositoryInterface;
-use App\Repositories\Interfaces\UsersTransactionsRepositoryInterface;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class TransferFundsService
 {
     private CalculationService $calculationService;
-    private SystemTransactionsRepositoryInterface $systemTransactionsRepository;
-    private UsersTransactionsRepositoryInterface $usersTransactionsRepository;
-    private WalletRepositoryInterface $walletRepository;
+    private SystemTransService $systemTransService;
+    private UsersTransService $usersTransService;
+    private WalletService $walletService;
 
+    // Here in real life we can use interfaces.
     public function __construct(
-        UsersTransactionsRepositoryInterface $usersTransactionsRepository,
-        SystemTransactionsRepositoryInterface $systemTransactionsRepository,
+        UsersTransService $usersTransService,
+        SystemTransService $systemTransService,
         CalculationService $calculationService,
-        WalletRepositoryInterface $walletRepository
+        WalletService $walletService
     )
     {
-        $this->usersTransactionsRepository = $usersTransactionsRepository;
-        $this->systemTransactionsRepository = $systemTransactionsRepository;
+        $this->usersTransService = $usersTransService;
+        $this->systemTransService = $systemTransService;
         $this->calculationService = $calculationService;
-        $this->walletRepository = $walletRepository;
+        $this->walletService = $walletService;
     }
 
+    /**
+     * @param TransactionDTO $transactionDTO
+     * @throws \Throwable
+     */
     public function createOperation(TransactionDTO $transactionDTO)
     {
         $commission = $this->calculationService->getCommissionFromAmount($transactionDTO->amount);
 
-        $senderWallet = $this->walletRepository->getByHash($transactionDTO->senderWalletHash);
-        $receiverWallet = $this->walletRepository->getByHash($transactionDTO->receiverWalletHash);
+        $senderWallet = $this->walletService->getByHash($transactionDTO->senderWalletHash);
+        $receiverWallet = $this->walletService->getByHash($transactionDTO->receiverWalletHash);
 
-        $usersTransaction = $this->usersTransactionsRepository->createPendingTransaction(
+        $this->walletService->setSender($senderWallet);
+        $this->walletService->setReceiver($receiverWallet);
+
+        $usersTransaction = $this->usersTransService->createPendingTransaction(
             $senderWallet->id,
             $receiverWallet->id,
             $transactionDTO->amount,
             $transactionDTO->commissionPayer
         );
-        $this->usersTransactionsRepository->setTransaction($usersTransaction);
+        $this->usersTransService->setTransaction($usersTransaction);
 
+        $writeOffSums = $this->calculationService->getSumsForWriteOff($transactionDTO->commissionPayer, $commission, $transactionDTO->amount);
 
-        $this->walletRepository->setSender($senderWallet);
-        $this->walletRepository->setReceiver($receiverWallet);
+        $this->checkBalancesForWriteOff($writeOffSums);
 
-        $sumsForWriteOff = $this->calculationService->getSumsForWriteOff($transactionDTO->commissionPayer, $commission, $transactionDTO->amount);
-
-
-
-        $this->checkBalancesForWriteOff($sumsForWriteOff);
-
+        $this->beginTransfer($writeOffSums, $commission);
 
     }
 
@@ -63,20 +64,40 @@ class TransferFundsService
      */
     private function checkBalancesForWriteOff(array $sums)
     {
-        $senderWallet = $this->walletRepository->getSender();
-        $receiverWallet = $this->walletRepository->getReceiver();
-
-        if (!$this->calculationService->ifEnoughFunds($senderWallet->current_balance, $sums['sender'])) {
-            throw new \Exception('Sender dont have enough funds for transfer');
+        if (!$this->calculationService->ifEnoughFunds($this->walletService->getSender()->current_balance, $sums['sender'])) {
+            $this->usersTransService->setFailed();
+            // Log Reason Somewhere
+            throw new BadRequestHttpException('Sender don`t have enough funds for transfer');
         }
-        if (!$this->calculationService->ifEnoughFunds($receiverWallet->current_balance, $sums['receiver'])) {
-            throw new \Exception('Receiver dont have enough funds for transfer');
+        if (!$this->calculationService->ifEnoughFunds($this->walletService->getReceiver()->current_balance, $sums['receiver'])) {
+            $this->usersTransService->setFailed();
+            // Log Reason Somewhere
+            throw new BadRequestHttpException('Receiver don`t have enough funds for transfer');
         }
 
     }
 
 
+    /**
+     * @throws \Throwable
+     */
+    private function beginTransfer(array $writeOffSums, $commission)
+    {
+        DB::beginTransaction();
 
+        try {
+            $this->walletService->chargeSumSender($writeOffSums['sender']);
+            $this->walletService->chargeSumReceiver($writeOffSums['receiver']);
+            $this->systemTransService->createTransaction($this->usersTransService->getTransactionId(), $commission);
+            $this->usersTransService->setSuccess();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // Log Reason Somewhere
+            throw $e;
+        }
+
+        DB::commit();
+    }
 
 
 }
