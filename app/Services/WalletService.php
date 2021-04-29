@@ -79,9 +79,9 @@ class WalletService
      * @param $sum
      * @throws \Throwable
      */
-    public function chargeSumReceiver($sum)
+    public function topUpSumReceiver($sum)
     {
-        $this->receiverWallet->current_balance = $this->receiverWallet->current_balance - $sum;
+        $this->receiverWallet->current_balance = $this->receiverWallet->current_balance + $sum;
         $this->receiverWallet->saveOrFail();
     }
 }

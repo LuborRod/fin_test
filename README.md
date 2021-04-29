@@ -8,11 +8,6 @@ Also, you should have free ports - 3306, 80. If you can`t free these ports, you 
 - CLone this repository from github
 - Run `make up` from root directory and wait for magic)
 
-----------------TESTING----------------
-
-Script for init tests - 
-`make tests`
-
 ------------DOCUMENTATION--------------
 
 After `make up` you will have 4 business_logic tables. 
@@ -53,6 +48,6 @@ I skipped `creating user/top-up wallet`. If I did this in real life, I would als
 But you gave me several clean hours for this task, that's why some moments are missed.
 
 P.S 2
-    Table `wallet` has custom field `hash`. I made it only for speed development.
+    For clean architecture we have to use interfaces in constructors. Logging was also skipped. I wrote commentaries.Table `wallet` has custom field `hash`. I made it only for speed development.
 This would be relevant if the application was pulled from the outside in order to hide the real `ids`.
 Or we can use JWT tokens for 'hiding' data. In the future, I can make free transfers between wallets that belong to the same user.Depends on project)

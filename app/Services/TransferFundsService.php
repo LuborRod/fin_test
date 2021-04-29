@@ -50,44 +50,41 @@ class TransferFundsService
         );
         $this->usersTransService->setTransaction($usersTransaction);
 
-        $writeOffSums = $this->calculationService->getSumsForWriteOff($transactionDTO->commissionPayer, $commission, $transactionDTO->amount);
 
-        $this->checkBalancesForWriteOff($writeOffSums);
+        $chargeSenderSum = 0;
+        $topUpReceiverSum = 0;
 
-        $this->beginTransfer($writeOffSums, $commission);
+        $transferSums = $this->calculationService->getSumsForTransfer($transactionDTO->commissionPayer, $commission, $transactionDTO->amount);
+
+        $this->checkSenderBalanceForWriteOff($transferSums['sender']);
+
+        $this->beginTransfer($transferSums, $commission);
 
     }
 
     /**
-     * @param array $sums
-     * @throws \Exception
+     * @param $senderSum
      */
-    private function checkBalancesForWriteOff(array $sums)
+    private function checkSenderBalanceForWriteOff($senderSum)
     {
-        if (!$this->calculationService->ifEnoughFunds($this->walletService->getSender()->current_balance, $sums['sender'])) {
+        if (!$this->calculationService->ifEnoughFunds($this->walletService->getSender()->current_balance, $senderSum)) {
             $this->usersTransService->setFailed();
             // Log Reason Somewhere
             throw new BadRequestHttpException('Sender don`t have enough funds for transfer');
         }
-        if (!$this->calculationService->ifEnoughFunds($this->walletService->getReceiver()->current_balance, $sums['receiver'])) {
-            $this->usersTransService->setFailed();
-            // Log Reason Somewhere
-            throw new BadRequestHttpException('Receiver don`t have enough funds for transfer');
-        }
-
     }
 
 
     /**
      * @throws \Throwable
      */
-    private function beginTransfer(array $writeOffSums, $commission)
+    private function beginTransfer(array $transferSums, $commission)
     {
         DB::beginTransaction();
 
         try {
-            $this->walletService->chargeSumSender($writeOffSums['sender']);
-            $this->walletService->chargeSumReceiver($writeOffSums['receiver']);
+            $this->walletService->chargeSumSender($transferSums['sender']);
+            $this->walletService->topUpSumReceiver($transferSums['receiver']);
             $this->systemTransService->createTransaction($this->usersTransService->getTransactionId(), $commission);
             $this->usersTransService->setSuccess();
         } catch (\Exception $e) {

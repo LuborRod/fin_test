@@ -21,16 +21,6 @@ class CalculationService
 
 
     /**
-     * @param int $amount
-     * @param float $commission
-     * @return float|int
-     */
-    public function getSumOfAmountAndCommission(int $amount, float $commission)
-    {
-        return $amount + $commission;
-    }
-
-    /**
      * @param $balance
      * @param $writeOffSum
      * @return bool
@@ -46,17 +36,17 @@ class CalculationService
      * @param $amount
      * @return array
      */
-    public function getSumsForWriteOff(int $commissionPayer, float $commission, $amount): array
+    public function getSumsForTransfer(int $commissionPayer, float $commission, $amount): array
     {
         $sums = [];
         switch($commissionPayer) {
             case UsersTransaction::COMMISSION_PAYER_SENDER:
-                $sums['sender'] = $this->getSumOfAmountAndCommission($amount, $commission);
-                $sums['receiver'] = 0;
+                $sums['sender'] = $amount + $commission;
+                $sums['receiver'] = $amount;
                 break;
             case UsersTransaction::COMMISSION_PAYER_RECEIVER:
                 $sums['sender'] = $amount;
-                $sums['receiver'] = $commission;
+                $sums['receiver'] = $amount - $commission;
                 break;
         }
 
