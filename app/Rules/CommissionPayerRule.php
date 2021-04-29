@@ -16,9 +16,7 @@ class CommissionPayerRule implements Rule
      */
     public function passes($attribute, $value): bool
     {
-        $permittedCommissionPayers = array_values(UsersTransaction::COMMISSION_PAYERS);
-
-        return in_array($value, $permittedCommissionPayers);
+        return in_array($value, [UsersTransaction::COMMISSION_PAYER_SENDER, UsersTransaction::COMMISSION_PAYER_RECEIVER]);
     }
 
     /**

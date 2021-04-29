@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * App\Models\UsersTransaction
+ * App\Models\UsersTransService
  *
  * @property int $id
  * @property string $date_created
@@ -43,10 +43,8 @@ class UsersTransaction extends Model
 
     const MIN_AMOUNT = 100;
 
-    const COMMISSION_PAYERS = [
-        1 => 'sender',
-        2 => 'receiver',
-    ];
+    const COMMISSION_PAYER_SENDER = 1;
+    const COMMISSION_PAYER_RECEIVER = 2;
 
     /**
      * The attributes that are mass assignable.

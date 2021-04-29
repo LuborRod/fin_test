@@ -41,14 +41,14 @@ PARAMS:
 1. `sender_wallet` => hash(above) -> string 
 2. `receiver_wallet` => hash(above) -> string
 3. `amount` => sum for transfer -> integer
-4. `commission_payer`(optional) -> string. You can choose, who will pay for commission.
-It can be `sender`, `receiver`. Default - `sender`.
+4. `commission_payer`(optional) -> integer. You can choose, who will pay for commission.
+It can be `1 => sender`, `2 => receiver`. Default - 1(sender).
 
 
 
 P.S 
-    I know about API Authentication by tokens.I missed it on purpose by your advice.
-Also, I skipped `creating user/top-up wallet`. If I did this in real life, I would also add different currencies to wallets.
+    I know about API Authentication by tokens.I missed it on purpose by your advice. Also, I didn't open 443 port for HTTPS.
+I skipped `creating user/top-up wallet`. If I did this in real life, I would also add different currencies to wallets.
 But you gave me several clean hours for this task, that's why some moments are missed.
 
 P.S 2

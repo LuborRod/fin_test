@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -36,6 +38,12 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+        $this->renderable(function (MethodNotAllowedHttpException $e, $request) {
+            return response()->json($e->getMessage(), 405);
+        });
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            return response()->json('404 Not found', 404);
         });
     }
 }

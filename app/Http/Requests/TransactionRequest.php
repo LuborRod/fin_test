@@ -8,7 +8,6 @@ use App\Rules\WalletHashRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\ValidationException;
 
 class TransactionRequest extends FormRequest
 {
@@ -44,9 +43,6 @@ class TransactionRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        $errors = (new ValidationException($validator))->errors();
-        throw new HttpResponseException(
-            response()->json(['errors' => $errors], 422)
-        );
+        throw new HttpResponseException(response()->json(['errors' => $validator->errors()], 422));
     }
 }

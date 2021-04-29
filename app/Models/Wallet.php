@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * App\Models\Wallet
+ * App\Models\WalletService
  *
  * @property int $id
  * @property int $user_id
