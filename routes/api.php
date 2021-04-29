@@ -15,5 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['namespace' => 'Api'], function () {
-    Route::post('transactions', [TransactionController::class, 'create']);
+    Route::post('transactions', [TransactionController::class, 'store']);
 });

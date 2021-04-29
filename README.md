@@ -16,13 +16,14 @@ Script for init tests -
 ------------DOCUMENTATION--------------
 
 After `make up` you will have 4 business_logic tables. 
-1. Users (default table)
-2. Wallet (users can have a lot of wallets)
-3. Transaction (Here we save all transactions(pending, success, failed))
-4. System Balance (Here we will store commission balance).
+1. users (default table)
+2. wallets (users can have a lot of wallets)
+3. users_transactions (Here we save all transactions(pending, success, failed))
+4. system_transactions (Here we will store commission balance).
 
 1) Upon application start the database should be populated with sample data - 
-After `make up` you will get 3 users and 5 wallets to transfer funds between. All wallets have 100 'coins'.
+After `make up` you will get 3 users and 5 wallets to transfer funds between. All wallets have 10000 'coins'.
+Minimal amount for transfer  100 coins. You can modify it in 'UserTransaction' constants.   
    
 These hashes(every wallet has unique hash) you need to make POST requests to api :
    - g0MJ7HpSRh
@@ -40,8 +41,8 @@ PARAMS:
 1. `sender_wallet` => hash(above) -> string 
 2. `receiver_wallet` => hash(above) -> string
 3. `amount` => sum for transfer -> integer
-4. `comission_payer`(optional) -> string. You can choose, who will pay for commission.
-It can be `sender`, `receiver`, `both`. Default - `sender`.
+4. `commission_payer`(optional) -> string. You can choose, who will pay for commission.
+It can be `sender`, `receiver`. Default - `sender`.
 
 
 

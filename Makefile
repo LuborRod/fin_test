@@ -1,6 +1,8 @@
-up:
-	env-init
+up:env-init \
 	migrate-up
+
+down:
+	 ./vendor/bin/sail down
 
 env-init:
 	./vendor/bin/sail up -d

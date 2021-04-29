@@ -20,6 +20,7 @@ class CreateUsersTransactionsTable extends Migration
             $table->foreignId('receiver_wallet_id')->references('id')->on('wallets');
             $table->integer('amount');
             $table->integer('commission_payer');
+            $table->integer('status');
         });
     }
 
