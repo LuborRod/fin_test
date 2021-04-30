@@ -29,11 +29,13 @@ class TransactionRequest extends FormRequest
     public function rules(): array
     {
         $minTransactionAmount = UsersTransaction::MIN_AMOUNT_FOR_TRANSFER;
+        $maxTransactionAmount = UsersTransaction::MAX_AMOUNT_FOR_TRANSFER;
 
         return [
             'sender_wallet' => ['required', new WalletHashRule],
             'receiver_wallet' => ['required','different:sender_wallet', new WalletHashRule],
-            'amount' => "required|integer|gte:$minTransactionAmount",
+            'amount' => "required|numeric|between:$minTransactionAmount,$maxTransactionAmount",
+//            'amount' => "required|integer|numeric|between:0,99.99|gte:$minTransactionAmount|lte:$maxTransactionAmount",
             'commission_payer' => ['integer', new CommissionPayerRule]
         ];
     }

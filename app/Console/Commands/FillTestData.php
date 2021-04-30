@@ -77,7 +77,7 @@ class FillTestData extends Command
         foreach ($userIds as $userId) {
             $wallet = new Wallet;
             $wallet->user_id = $userId;
-            $wallet->current_balance = 10000;
+            $wallet->current_balance = 100000000;
             $wallet->hash = $hashes[$i];
             $wallet->save();
             $i++;

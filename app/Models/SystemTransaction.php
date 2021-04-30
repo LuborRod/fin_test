@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * App\Models\SystemTransService
  * @property int $id
  * @property int $user_transaction_id
- * @property float $amount
- * @property float $current_balance
+ * @property int $amount
+ * @property int $current_balance
  * @property-read \App\Models\UsersTransaction|null $usersTransaction
  * @method static \Illuminate\Database\Eloquent\Builder|SystemTransaction newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SystemTransaction newQuery()

@@ -27,7 +27,7 @@ class SystemTransService
      */
     private function getCurrentBalance()
     {
-        $objectSystemTransaction = SystemTransaction::orderBy('id', 'desc')->first();
+        $objectSystemTransaction = SystemTransaction::orderBy('id', 'desc')->lockForUpdate()->first();
 
         return $objectSystemTransaction->current_balance ?? 0;
     }

@@ -28,6 +28,15 @@ class WalletService
 
 
     /**
+     * @return int
+     */
+    public function getSenderId(): int
+    {
+        return $this->senderWallet->id;
+    }
+
+
+    /**
      * @param \App\Models\Wallet $wallet
      */
     public function setReceiver(Wallet $wallet): void
@@ -44,6 +53,14 @@ class WalletService
         return $this->receiverWallet;
     }
 
+    /**
+     * @return int
+     */
+    public function getReceiverId(): int
+    {
+        return $this->receiverWallet->id;
+    }
+
 
     /**
      * @param string $hash
@@ -51,7 +68,7 @@ class WalletService
      */
     public function getByHash(string $hash)
     {
-        return Wallet::where('hash', '=', $hash)->first();
+        return Wallet::where('hash', '=', $hash)->lockForUpdate()->first();
     }
 
     /**

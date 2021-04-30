@@ -15,14 +15,17 @@ After `make init` you will have 4 business_logic tables.
    
 2. wallets (users can have a lot of wallets)
    
-3. users_transactions (Here we save all transactions(pending, success, failed))
-In the future, maybe we have to save failed transactions in logging tables, not in main table.
+3. users_transactions (Here we save all users transactions)
 
 4. system_transactions (Here we will store commission balance).
 
 1) Upon application start the database should be populated with sample data - 
-After `make init` you will get 3 users and 6 wallets to transfer funds between. All wallets have 10000 'coins'.
-Minimal amount for transfer  100 coins. You can modify it in 'UserTransaction' constants.   
+After `make init` you will get 3 users and 6 wallets to transfer funds between. All wallets have 100 000 000 'Satoshi'(1 BTC).
+   
+Minimal amount for transfer  - 0.00000001. 
+Maximal amount for transfer  - 1000. 
+   
+You can modify it in 'UserTransaction' constants.   
    
 These hashes(every wallet has unique hash) you need to make POST requests to api :
    - g0MJ7HpSRh
@@ -40,7 +43,7 @@ Request URL: http://localhost/api/transactions
 PARAMS:
 1. `sender_wallet` => hash(above) -> string 
 2. `receiver_wallet` => hash(above) -> string
-3. `amount` => sum for transfer -> integer
+3. `amount` => sum for transfer -> integer|float
 4. `commission_payer`(optional) -> integer. You can choose, who will pay for commission.
 It can be `1 => sender`, `2 => receiver`. Default - 1(sender).
 
@@ -55,4 +58,4 @@ P.S 2
     For clean architecture we have to use interfaces in constructors. Logging was also skipped. I wrote commentaries.Table `wallet` has custom field `hash`. I made it only for speed development.
 This would be relevant if the application was pulled from the outside in order to hide the real `ids`.
 Or we can use JWT tokens for 'hiding' data. In the future, I can make free transfers between wallets that belong to the same user.Depends on project).
-For your convenience I delete .env from .gitignore.)
+For your convenience I delete .env from .gitignore). Own custom exceptions for every case are also welcome.)

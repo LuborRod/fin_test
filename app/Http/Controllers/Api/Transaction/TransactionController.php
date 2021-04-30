@@ -27,7 +27,7 @@ class TransactionController extends Controller
         $transactionData = new TransactionDTO(
             $transactionRequest->input('sender_wallet'),
             $transactionRequest->input('receiver_wallet'),
-            $transactionRequest->input('amount'),
+            (int)($transactionRequest->input('amount') * $this->transferFundsService::FORMAT_BTC_TO_SATOSHI),
             $transactionRequest->input('commission_payer'),
         );
 

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * @property int $id
  * @property int $user_id
- * @property float $current_balance
+ * @property int $current_balance
  * @property string $hash
  * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet newModelQuery()
@@ -47,7 +47,7 @@ class Wallet extends Model
      * @var array
      */
     protected $attributes = [
-        'current_balance' => 100,
+        'current_balance' => 100000000,
     ];
 
 

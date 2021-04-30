@@ -5,61 +5,64 @@ namespace App\Services;
 
 
 use App\Models\UsersTransaction;
+use Money\Currency;
+use Money\Money;
 
 class CalculationService
 {
     const COMMISSION = 1.015;
 
+    private Money $amount;
+    private Money $commission;
+
 
     /**
      * @param int $amount
-     * @return float
      */
-    public function getCommissionFromAmount(int $amount): float
+    public function setAmountAndCommissionObjects(int $amount): void
     {
-        return round($amount * self::COMMISSION - $amount, 3);
+        $this->amount = new Money($amount, new Currency('XBT'));
+
+        $amountWithCommission = $this->amount->multiply(self::COMMISSION);
+
+        $this->commission = $amountWithCommission->subtract($this->amount);
     }
 
-
-    /**
-     * @param float $balance
-     * @param $writeOffSum
-     * @return bool
-     */
-    public function ifEnoughFunds(float $balance, $writeOffSum): bool
-    {
-        return $balance >= $writeOffSum;
-    }
 
     /**
      * @param int $commissionPayer
-     * @param float $commission
-     * @param int $amount
      * @return array
      * @throws \Exception
      */
-    public function getSumsForTransfer(int $commissionPayer, float $commission, int $amount): array
+    public function getSumsForTransfer(int $commissionPayer): array
     {
-        if (empty($commission)) {
-            //Log somewhere
-            throw new \Exception();
-        }
-
         $sums = [];
         switch ($commissionPayer) {
             case UsersTransaction::COMMISSION_PAYER_SENDER:
-                $sums['sender'] = $amount + $commission;
-                $sums['receiver'] = $amount;
+                $sums['sender'] = (int)$this->amount->add($this->commission)->getAmount();
+                $sums['receiver'] = (int)$this->amount->getAmount();
                 break;
             case UsersTransaction::COMMISSION_PAYER_RECEIVER:
-                $sums['sender'] = $amount;
-                $sums['receiver'] = $amount - $commission;
+                $sums['sender'] = (int)$this->amount->getAmount();;
+                $sums['receiver'] = (int)$this->amount->subtract($this->commission)->getAmount();
                 break;
             default:
                 //Log somewhere
                 throw new \Exception();
         }
 
+        $sums['commission'] = (int)$this->commission->getAmount();
+
         return $sums;
+    }
+
+    /**
+     * @param int $balance
+     * @param int $writeOffSum
+     * @return bool
+     */
+    public function ifEnoughFunds(int $balance, int $writeOffSum): bool
+    {
+        return $balance >= $writeOffSum;
     }
 }

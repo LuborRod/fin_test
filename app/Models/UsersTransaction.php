@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $receiver_wallet_id
  * @property int $amount
  * @property int $commission_payer
- * @property int|null $status
  * @property-read \App\Models\Wallet|null $receiverWallet
  * @property-read \App\Models\Wallet|null $senderWallet
  * @property-read \Illuminate\Database\Eloquent\Collection|UsersTransaction[] $systemTransactions
@@ -37,11 +36,8 @@ class UsersTransaction extends Model
 {
     use HasFactory;
 
-    const STATUS_PENDING = 1;
-    const STATUS_SUCCESS = 2;
-    const STATUS_FAILED = 3;
-
-    const MIN_AMOUNT_FOR_TRANSFER = 100;
+    const MIN_AMOUNT_FOR_TRANSFER = 0.00000001;
+    const MAX_AMOUNT_FOR_TRANSFER = 10000;
 
     const COMMISSION_PAYER_SENDER = 1;
     const COMMISSION_PAYER_RECEIVER = 2;
@@ -59,7 +55,6 @@ class UsersTransaction extends Model
         'amount',
         'date_created',
         'commission_payer',
-        'status',
     ];
 
 

@@ -16,8 +16,8 @@ class CreateSystemTransactionsTable extends Migration
         Schema::create('system_transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_transaction_id')->references('id')->on('users_transactions');
-            $table->double('amount');
-            $table->double('current_balance');
+            $table->bigInteger('amount');
+            $table->bigInteger('current_balance');
         });
     }
 

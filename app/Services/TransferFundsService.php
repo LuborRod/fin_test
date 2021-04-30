@@ -9,6 +9,8 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class TransferFundsService
 {
+    const FORMAT_BTC_TO_SATOSHI = 100000000;
+
     private CalculationService $calculationService;
     private SystemTransService $systemTransService;
     private UsersTransService $usersTransService;
@@ -34,28 +36,29 @@ class TransferFundsService
      */
     public function createOperation(TransactionDTO $transactionDTO): void
     {
-        $commission = $this->calculationService->getCommissionFromAmount($transactionDTO->amount);
+        DB::beginTransaction();
 
-        $senderWallet = $this->walletService->getByHash($transactionDTO->senderWalletHash);
-        $receiverWallet = $this->walletService->getByHash($transactionDTO->receiverWalletHash);
+        try {
+            $senderWallet = $this->walletService->getByHash($transactionDTO->senderWalletHash);
+            $receiverWallet = $this->walletService->getByHash($transactionDTO->receiverWalletHash);
 
-        $this->walletService->setSender($senderWallet);
-        $this->walletService->setReceiver($receiverWallet);
+            $this->walletService->setSender($senderWallet);
+            $this->walletService->setReceiver($receiverWallet);
 
-        $usersTransaction = $this->usersTransService->createPendingTransaction(
-            $senderWallet->id,
-            $receiverWallet->id,
-            $transactionDTO->amount,
-            $transactionDTO->commissionPayer
-        );
-        $this->usersTransService->setTransaction($usersTransaction);
+            $this->calculationService->setAmountAndCommissionObjects($transactionDTO->amount);
+            $transferSums = $this->calculationService->getSumsForTransfer($transactionDTO->commissionPayer);
 
-        $transferSums = $this->calculationService->getSumsForTransfer($transactionDTO->commissionPayer, $commission, $transactionDTO->amount);
+            $this->checkSenderBalanceForWriteOff($transferSums['sender']);
 
-        $this->checkSenderBalanceForWriteOff($transferSums['sender']);
+            $this->transferFunds($transferSums, $transactionDTO);
 
-        $this->transferFunds($transferSums, $commission);
+            DB::commit();
 
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // Log Reason Somewhere
+            throw $e;
+        }
     }
 
     /**
@@ -66,11 +69,10 @@ class TransferFundsService
     {
         $senderWallet = $this->walletService->getSender();
         if (empty($senderWallet)) {
-            //Log somewhere
+            //Log Reason somewhere
             throw new \Exception();
         }
         if (!$this->calculationService->ifEnoughFunds($senderWallet->current_balance, $senderSum)) {
-            $this->usersTransService->setFailed();
             // Log Reason Somewhere
             throw new BadRequestHttpException('Sender don`t have enough funds for transfer');
         }
@@ -80,22 +82,22 @@ class TransferFundsService
     /**
      * @throws \Throwable
      */
-    private function transferFunds(array $transferSums, $commission): void
+    private function transferFunds(array $transferSums, TransactionDTO $transactionDTO): void
     {
-        DB::beginTransaction();
+        $this->walletService->chargeSumSender($transferSums['sender']);
 
-        try {
-            $this->walletService->chargeSumSender($transferSums['sender']);
-            $this->walletService->topUpSumReceiver($transferSums['receiver']);
-            $this->systemTransService->createTransaction($this->usersTransService->getTransactionId(), $commission);
-            $this->usersTransService->setSuccess();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            // Log Reason Somewhere
-            throw $e;
-        }
+        $this->walletService->topUpSumReceiver($transferSums['receiver']);
 
-        DB::commit();
+        $userTransaction = $this->usersTransService->createTransaction(
+            $this->walletService->getSenderId(),
+            $this->walletService->getReceiverId(),
+            $transactionDTO->amount,
+            $transactionDTO->commissionPayer,
+        );
+
+        $this->systemTransService->createTransaction(
+            $userTransaction->id,
+            $transferSums['commission']);
     }
 
 

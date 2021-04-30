@@ -18,9 +18,8 @@ class CreateUsersTransactionsTable extends Migration
             $table->dateTime('date_created');
             $table->foreignId('sender_wallet_id')->references('id')->on('wallets');
             $table->foreignId('receiver_wallet_id')->references('id')->on('wallets');
-            $table->double('amount');
+            $table->bigInteger('amount');
             $table->integer('commission_payer');
-            $table->integer('status');
         });
     }
 
