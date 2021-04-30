@@ -12,8 +12,12 @@ Also, you should have free ports - 3306, 80. If you can`t free these ports, you 
 
 After `make init` you will have 4 business_logic tables. 
 1. users (default table)
+   
 2. wallets (users can have a lot of wallets)
+   
 3. users_transactions (Here we save all transactions(pending, success, failed))
+In the future, maybe we have to save failed transactions in logging tables, not in main table.
+
 4. system_transactions (Here we will store commission balance).
 
 1) Upon application start the database should be populated with sample data - 
@@ -43,7 +47,7 @@ It can be `1 => sender`, `2 => receiver`. Default - 1(sender).
 
 
 P.S 
-    I know about API Authentication by tokens.I missed it on purpose by your advice. Also, I didn't open 443 port for HTTPS.
+    I know about API Authentication by tokens.I missed it for speed. Also, I didn't open 443 port for HTTPS.
 I skipped `creating user/top-up wallet`. If I did this in real life, I would also add different currencies to wallets.
 But you gave me several clean hours for this task, that's why some moments are missed.
 
