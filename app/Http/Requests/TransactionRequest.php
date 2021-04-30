@@ -35,7 +35,6 @@ class TransactionRequest extends FormRequest
             'sender_wallet' => ['required', new WalletHashRule],
             'receiver_wallet' => ['required','different:sender_wallet', new WalletHashRule],
             'amount' => "required|numeric|between:$minTransactionAmount,$maxTransactionAmount",
-//            'amount' => "required|integer|numeric|between:0,99.99|gte:$minTransactionAmount|lte:$maxTransactionAmount",
             'commission_payer' => ['integer', new CommissionPayerRule]
         ];
     }
