@@ -7,13 +7,12 @@ use Carbon\Carbon;
 
 class UsersTransService
 {
-
     private UsersTransaction $transaction;
 
     /**
      * @param UsersTransaction $usersTransaction
      */
-    public function setTransaction(UsersTransaction $usersTransaction)
+    public function setTransaction(UsersTransaction $usersTransaction): void
     {
         $this->transaction = $usersTransaction;
     }
@@ -35,13 +34,14 @@ class UsersTransService
     }
 
 
-    public function setFailed()
+    public function setFailed(): void
     {
         $this->getTransaction()->status = UsersTransaction::STATUS_FAILED;
         $this->getTransaction()->save();
     }
 
-    public function setSuccess()
+
+    public function setSuccess(): void
     {
         $this->getTransaction()->status = UsersTransaction::STATUS_SUCCESS;
         $this->getTransaction()->save();

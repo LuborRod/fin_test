@@ -12,7 +12,7 @@ class WalletService
     /**
      * @param \App\Models\Wallet $wallet
      */
-    public function setSender(Wallet $wallet)
+    public function setSender(Wallet $wallet): void
     {
         $this->senderWallet = $wallet;
     }
@@ -30,16 +30,16 @@ class WalletService
     /**
      * @param \App\Models\Wallet $wallet
      */
-    public function setReceiver(Wallet $wallet)
+    public function setReceiver(Wallet $wallet): void
     {
         $this->receiverWallet = $wallet;
     }
 
 
     /**
-     * @return mixed
+     * @return Wallet
      */
-    public function getReceiver()
+    public function getReceiver(): Wallet
     {
         return $this->receiverWallet;
     }
@@ -68,7 +68,7 @@ class WalletService
      * @param $sum
      * @throws \Throwable
      */
-    public function chargeSumSender($sum)
+    public function chargeSumSender($sum): void
     {
         $this->senderWallet->current_balance = $this->senderWallet->current_balance - $sum;
         $this->senderWallet->saveOrFail();
@@ -79,7 +79,7 @@ class WalletService
      * @param $sum
      * @throws \Throwable
      */
-    public function topUpSumReceiver($sum)
+    public function topUpSumReceiver($sum): void
     {
         $this->receiverWallet->current_balance = $this->receiverWallet->current_balance + $sum;
         $this->receiverWallet->saveOrFail();

@@ -22,7 +22,7 @@ class CalculationService
 
 
     /**
-     * @param $balance
+     * @param float $balance
      * @param $writeOffSum
      * @return bool
      */

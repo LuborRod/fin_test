@@ -32,7 +32,7 @@ class TransferFundsService
      * @param TransactionDTO $transactionDTO
      * @throws \Throwable
      */
-    public function createOperation(TransactionDTO $transactionDTO)
+    public function createOperation(TransactionDTO $transactionDTO): void
     {
         $commission = $this->calculationService->getCommissionFromAmount($transactionDTO->amount);
 
@@ -62,7 +62,7 @@ class TransferFundsService
      * @param $senderSum
      * @throws \Exception
      */
-    private function checkSenderBalanceForWriteOff($senderSum)
+    private function checkSenderBalanceForWriteOff($senderSum): void
     {
         $senderWallet = $this->walletService->getSender();
         if (empty($senderWallet)) {
@@ -80,7 +80,7 @@ class TransferFundsService
     /**
      * @throws \Throwable
      */
-    private function transferFunds(array $transferSums, $commission)
+    private function transferFunds(array $transferSums, $commission): void
     {
         DB::beginTransaction();
 
