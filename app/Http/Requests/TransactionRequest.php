@@ -28,7 +28,7 @@ class TransactionRequest extends FormRequest
      */
     public function rules(): array
     {
-        $minTransactionAmount = UsersTransaction::MIN_AMOUNT;
+        $minTransactionAmount = UsersTransaction::MIN_AMOUNT_FOR_TRANSFER;
 
         return [
             'sender_wallet' => ['required', new WalletHashRule],

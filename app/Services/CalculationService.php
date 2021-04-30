@@ -10,6 +10,7 @@ class CalculationService
 {
     const COMMISSION = 1.015;
 
+
     /**
      * @param int $amount
      * @return float
@@ -25,7 +26,7 @@ class CalculationService
      * @param $writeOffSum
      * @return bool
      */
-    public function ifEnoughFunds($balance, $writeOffSum): bool
+    public function ifEnoughFunds(float $balance, $writeOffSum): bool
     {
         return $balance >= $writeOffSum;
     }
@@ -33,13 +34,19 @@ class CalculationService
     /**
      * @param int $commissionPayer
      * @param float $commission
-     * @param $amount
+     * @param int $amount
      * @return array
+     * @throws \Exception
      */
-    public function getSumsForTransfer(int $commissionPayer, float $commission, $amount): array
+    public function getSumsForTransfer(int $commissionPayer, float $commission, int $amount): array
     {
+        if (empty($commission)) {
+            //Log somewhere
+            throw new \Exception();
+        }
+
         $sums = [];
-        switch($commissionPayer) {
+        switch ($commissionPayer) {
             case UsersTransaction::COMMISSION_PAYER_SENDER:
                 $sums['sender'] = $amount + $commission;
                 $sums['receiver'] = $amount;
@@ -48,6 +55,9 @@ class CalculationService
                 $sums['sender'] = $amount;
                 $sums['receiver'] = $amount - $commission;
                 break;
+            default:
+                //Log somewhere
+                throw new \Exception();
         }
 
         return $sums;

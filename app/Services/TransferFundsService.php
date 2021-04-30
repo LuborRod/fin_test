@@ -60,10 +60,16 @@ class TransferFundsService
 
     /**
      * @param $senderSum
+     * @throws \Exception
      */
     private function checkSenderBalanceForWriteOff($senderSum)
     {
-        if (!$this->calculationService->ifEnoughFunds($this->walletService->getSender()->current_balance, $senderSum)) {
+        $senderWallet = $this->walletService->getSender();
+        if (empty($senderWallet)) {
+            //Log somewhere
+            throw new \Exception();
+        }
+        if (!$this->calculationService->ifEnoughFunds($senderWallet->current_balance, $senderSum)) {
             $this->usersTransService->setFailed();
             // Log Reason Somewhere
             throw new BadRequestHttpException('Sender don`t have enough funds for transfer');

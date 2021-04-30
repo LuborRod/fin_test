@@ -37,16 +37,16 @@ class UsersTransaction extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
-
     const STATUS_PENDING = 1;
     const STATUS_SUCCESS = 2;
     const STATUS_FAILED = 3;
 
-    const MIN_AMOUNT = 100;
+    const MIN_AMOUNT_FOR_TRANSFER = 100;
 
     const COMMISSION_PAYER_SENDER = 1;
     const COMMISSION_PAYER_RECEIVER = 2;
+
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.

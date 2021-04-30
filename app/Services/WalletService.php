@@ -19,9 +19,9 @@ class WalletService
 
 
     /**
-     * @return mixed
+     * @return Wallet
      */
-    public function getSender()
+    public function getSender(): Wallet
     {
         return $this->senderWallet;
     }

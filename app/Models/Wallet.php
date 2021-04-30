@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * @property int $id
  * @property int $user_id
- * @property int $current_balance
+ * @property float $current_balance
  * @property string $hash
  * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet newModelQuery()
