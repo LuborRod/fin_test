@@ -14,7 +14,7 @@ class TransferFundsService
     private UsersTransService $usersTransService;
     private WalletService $walletService;
 
-    // Here in real life we can use interfaces.
+    // Here in real life we can have to use interfaces.And then in custom service_providers to bind dependencies.
     public function __construct(
         UsersTransService $usersTransService,
         SystemTransService $systemTransService,
@@ -50,15 +50,11 @@ class TransferFundsService
         );
         $this->usersTransService->setTransaction($usersTransaction);
 
-
-        $chargeSenderSum = 0;
-        $topUpReceiverSum = 0;
-
         $transferSums = $this->calculationService->getSumsForTransfer($transactionDTO->commissionPayer, $commission, $transactionDTO->amount);
 
         $this->checkSenderBalanceForWriteOff($transferSums['sender']);
 
-        $this->beginTransfer($transferSums, $commission);
+        $this->transferFunds($transferSums, $commission);
 
     }
 
@@ -78,7 +74,7 @@ class TransferFundsService
     /**
      * @throws \Throwable
      */
-    private function beginTransfer(array $transferSums, $commission)
+    private function transferFunds(array $transferSums, $commission)
     {
         DB::beginTransaction();
 

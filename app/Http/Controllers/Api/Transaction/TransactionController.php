@@ -6,6 +6,7 @@ use App\DTO\TransactionDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TransactionRequest;
 use App\Services\TransferFundsService;
+use Illuminate\Http\JsonResponse;
 
 class TransactionController extends Controller
 {
@@ -18,10 +19,10 @@ class TransactionController extends Controller
 
     /**
      * @param TransactionRequest $transactionRequest
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws \Throwable
      */
-    public function store(TransactionRequest $transactionRequest): \Illuminate\Http\JsonResponse
+    public function store(TransactionRequest $transactionRequest): JsonResponse
     {
         $transactionData = new TransactionDTO(
             $transactionRequest->input('sender_wallet'),

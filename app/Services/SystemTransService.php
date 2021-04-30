@@ -5,7 +5,6 @@ namespace App\Services;
 
 
 use App\Models\SystemTransaction;
-use Illuminate\Database\Eloquent\Model;
 
 class SystemTransService
 {
