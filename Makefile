@@ -21,6 +21,9 @@ docker-build:
 	docker-compose build
 
 api-init: api-composer-install \
+		  api-change-mode-storage \
+		  api-config-clear \
+		  api-cache-clear \
 	      api-init-migrations \
 	      fill-test-data
 
@@ -35,6 +38,15 @@ api-composer-remove:
 
 api-init-migrations:
 	docker-compose run --rm  php-cli php artisan migrate
+
+api-config-clear:
+	docker-compose run --rm  php-cli php artisan config:clear
+
+api-cache-clear:
+	docker-compose run --rm  php-cli php artisan cache:clear
+
+api-change-mode-storage:
+	docker-compose run --rm  php-cli chmod -R 777 storage/
 
 api-create-migration:
 	docker-compose run --rm  php-cli php artisan make:migration $(arg)
