@@ -1,43 +1,58 @@
-# For more information: https://laravel.com/docs/sail
-version: '3'
+version: "3.7"
 services:
-    laravel.test:
-        build:
-            context: ./docker/8.0
-            dockerfile: Dockerfile
-            args:
-                WWWGROUP: '${WWWGROUP}'
-        image: sail-8.0/app
-        ports:
-            - '${APP_PORT:-80}:80'
-        environment:
-            WWWUSER: '${WWWUSER}'
-            LARAVEL_SAIL: 1
-        volumes:
-            - '.:/var/www/html'
-        networks:
-            - sail
-        depends_on:
-            - mysql
-    mysql:
-        image: 'mysql:8.0'
-        ports:
-            - '${FORWARD_DB_PORT:-3306}:3306'
-        environment:
-            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_DATABASE: '${DB_DATABASE}'
-            MYSQL_USER: '${DB_USERNAME}'
-            MYSQL_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-        volumes:
-            - 'sailmysql:/var/lib/mysql'
-        networks:
-            - sail
-        healthcheck:
-          test: ["CMD", "mysqladmin", "ping"]
+  nginx:
+    build:
+      context: docker/nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/app
+    depends_on:
+      - php-fpm
+    networks:
+      - paxful
+
+  php-fpm:
+    build:
+      context: docker/php-fpm
+    volumes:
+      - ./:/app
+    depends_on:
+      - db
+    networks:
+      - paxful
+
+  php-cli:
+    build:
+      context: docker/php-cli
+    volumes:
+      - ./:/app
+    depends_on:
+      - db
+    networks:
+      - paxful
+
+  db:
+    image: library/mysql:5.7.30
+    container_name: fixim-db
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+        MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+        MYSQL_DATABASE: '${DB_DATABASE}'
+        MYSQL_USER: '${DB_USERNAME}'
+        MYSQL_PASSWORD: '${DB_PASSWORD}'
+        MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - paxful
+
 networks:
-    sail:
-        driver: bridge
+  paxful:
+    driver: bridge
+
 volumes:
-    sailmysql:
-        driver: local
+  db-data:

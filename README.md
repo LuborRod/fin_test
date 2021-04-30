@@ -6,18 +6,18 @@ You have to be installed `docker && docker-compose && make`.
 Also, you should have free ports - 3306, 80. If you can`t free these ports, you have to change it manually in docker-compose.yml
 
 - CLone this repository from github
-- Run `make up` from root directory and wait for magic)
+- Run `make init` from root directory and wait for magic)
 
 ------------DOCUMENTATION--------------
 
-After `make up` you will have 4 business_logic tables. 
+After `make init` you will have 4 business_logic tables. 
 1. users (default table)
 2. wallets (users can have a lot of wallets)
 3. users_transactions (Here we save all transactions(pending, success, failed))
 4. system_transactions (Here we will store commission balance).
 
 1) Upon application start the database should be populated with sample data - 
-After `make up` you will get 3 users and 6 wallets to transfer funds between. All wallets have 10000 'coins'.
+After `make init` you will get 3 users and 6 wallets to transfer funds between. All wallets have 10000 'coins'.
 Minimal amount for transfer  100 coins. You can modify it in 'UserTransaction' constants.   
    
 These hashes(every wallet has unique hash) you need to make POST requests to api :
@@ -50,4 +50,5 @@ But you gave me several clean hours for this task, that's why some moments are m
 P.S 2
     For clean architecture we have to use interfaces in constructors. Logging was also skipped. I wrote commentaries.Table `wallet` has custom field `hash`. I made it only for speed development.
 This would be relevant if the application was pulled from the outside in order to hide the real `ids`.
-Or we can use JWT tokens for 'hiding' data. In the future, I can make free transfers between wallets that belong to the same user.Depends on project)
+Or we can use JWT tokens for 'hiding' data. In the future, I can make free transfers between wallets that belong to the same user.Depends on project).
+For your convenience I delete .env from .gitignore.)

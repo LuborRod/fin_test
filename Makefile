@@ -1,18 +1,52 @@
-up:env-init \
-	migrate-up \
-	fill-test-data
+init: docker-down-clear docker-pull docker-build docker-up api-init
+up: docker-up
+down: docker-down
+restart: down up
 
-down:
-	 ./vendor/bin/sail down
+migrations: api-init-migrations
 
-env-init:
-	./vendor/bin/sail up -d
+docker-up:
+	docker-compose up -d
 
-migrate-up:
-	./vendor/bin/sail artisan migrate
+docker-down:
+	docker-compose down --remove-orphans
+
+docker-down-clear:
+	docker-compose down -v --remove-orphans
+
+docker-pull:
+	docker-compose pull
+
+docker-build:
+	docker-compose build
+
+api-init: api-composer-install \
+	      api-init-migrations \
+	      fill-test-data
+
+api-composer-install:
+	docker-compose run --rm php-cli composer install
+
+api-composer-require:
+	docker-compose run --rm php-cli composer require $(arg)
+
+api-composer-remove:
+	docker-compose run --rm php-cli composer remove $(arg)
+
+api-init-migrations:
+	docker-compose run --rm  php-cli php artisan migrate
+
+api-create-migration:
+	docker-compose run --rm  php-cli php artisan make:migration $(arg)
+
+api-revert-migrations:
+	docker-compose run --rm  php-cli php artisan migrate:reset
+
+mysql:
+	docker-compose exec db mysql -u root -ppass
+
+php-script:
+	docker-compose run --rm php-cli php artisan $(arg)
 
 fill-test-data:
-	./vendor/bin/sail artisan fill:testData
-
-tests:
-	./vendor/bin/sail TTTTTTTTTTTTTEEEEEEEEEEEEESSSSSSSSSSSSTTTTTTTTTTT
+	docker-compose run --rm php-cli php artisan fill:testData
