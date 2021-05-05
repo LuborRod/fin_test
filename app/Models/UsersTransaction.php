@@ -36,11 +36,11 @@ class UsersTransaction extends Model
 {
     use HasFactory;
 
-    const MIN_AMOUNT_FOR_TRANSFER = 0.00000001;
-    const MAX_AMOUNT_FOR_TRANSFER = 10000;
+    public const MIN_AMOUNT_FOR_TRANSFER = 0.00000001;
+    public const MAX_AMOUNT_FOR_TRANSFER = 10000;
 
-    const COMMISSION_PAYER_SENDER = 1;
-    const COMMISSION_PAYER_RECEIVER = 2;
+    public const COMMISSION_PAYER_SENDER = 1;
+    public const COMMISSION_PAYER_RECEIVER = 2;
 
     public $timestamps = false;
 

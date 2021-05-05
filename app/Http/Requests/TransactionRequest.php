@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\UsersTransaction;
+use App\Repositories\Wallet\WalletRepository;
 use App\Rules\CommissionPayerRule;
 use App\Rules\WalletHashRule;
 use Illuminate\Contracts\Validation\Validator;
@@ -24,16 +25,17 @@ class TransactionRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param WalletRepository $walletRepository
      * @return array
      */
-    public function rules(): array
+    public function rules(WalletRepository $walletRepository): array
     {
         $minTransactionAmount = UsersTransaction::MIN_AMOUNT_FOR_TRANSFER;
         $maxTransactionAmount = UsersTransaction::MAX_AMOUNT_FOR_TRANSFER;
 
         return [
-            'sender_wallet' => ['required', new WalletHashRule],
-            'receiver_wallet' => ['required','different:sender_wallet', new WalletHashRule],
+            'sender_wallet' => ['required', new WalletHashRule($walletRepository)],
+            'receiver_wallet' => ['required','different:sender_wallet', new WalletHashRule($walletRepository)],
             'amount' => "required|numeric|between:$minTransactionAmount,$maxTransactionAmount",
             'commission_payer' => ['integer', new CommissionPayerRule]
         ];

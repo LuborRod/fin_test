@@ -49,8 +49,8 @@ class Handler extends ExceptionHandler
         $this->renderable(function (BadRequestHttpException $e, $request) {
             return response()->json($e->getMessage(), 403);
         });
-        $this->renderable(function (\Exception $e, $request) {
-            return response()->json('Ooops, something went wrong', 400);
-        });
+//        $this->renderable(function (\Exception $e, $request) {
+//            return response()->json('Ooops, something went wrong', 400);
+//        });
     }
 }

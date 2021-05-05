@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Services;
+namespace App\Repositories\UsersTransactions;
 
+use App\Contracts\Repositories\UsersTransactions\IUsersTransactionsRepository;
 use App\Models\UsersTransaction;
 use Carbon\Carbon;
 
-class UsersTransService
+class UsersTransactionsRepository implements IUsersTransactionsRepository
 {
-
     /**
      * @param int $senderWalletId
      * @param int $receiverWalletId
@@ -16,7 +16,7 @@ class UsersTransService
      * @return UsersTransaction
      * @throws \Throwable
      */
-    public function createTransaction(int $senderWalletId, int $receiverWalletId, int $amount, int $commissionPayer): UsersTransaction
+    public function create(int $senderWalletId, int $receiverWalletId, int $amount, int $commissionPayer): UsersTransaction
     {
         $usersTransaction = new UsersTransaction();
         $usersTransaction->sender_wallet_id = $senderWalletId;
@@ -28,6 +28,4 @@ class UsersTransService
 
         return $usersTransaction;
     }
-
-
 }

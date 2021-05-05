@@ -20,7 +20,7 @@ After `make init` you will have 4 business_logic tables.
 4. system_transactions (Here we will store commission balance).
 
 1) Upon application start the database should be populated with sample data - 
-After `make init` you will get 3 users and 6 wallets to transfer funds between. All wallets have 100 000 000 'Satoshi'(1 BTC).
+After `make init` you will get 3 users and 6 wallets to transfer funds between. All wallets have 1 000 000 000 'Satoshi'(10 BTC).
    
 Minimal amount for transfer  - 0.00000001. 
 Maximal amount for transfer  - 1000. 
@@ -43,7 +43,7 @@ Request URL: http://localhost/api/transactions
 PARAMS:
 1. `sender_wallet` => hash(above) -> string 
 2. `receiver_wallet` => hash(above) -> string
-3. `amount` => sum for transfer -> integer|float
+3. `amount` => sum for transfer -> integer|float. BTC
 4. `commission_payer`(optional) -> integer. You can choose, who will pay for commission.
 It can be `1 => sender`, `2 => receiver`. Default - 1(sender).
 

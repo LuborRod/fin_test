@@ -1,20 +1,20 @@
 <?php
 
+namespace App\Repositories\SystemTransactions;
 
-namespace App\Services;
-
-
+use App\Contracts\Repositories\SystemTransactions\ISystemTransactionsRepository;
 use App\Models\SystemTransaction;
 
-class SystemTransService
+class SystemTransactionsRepository implements ISystemTransactionsRepository
 {
     /**
+     * @param int $userTransactionId
+     * @param int $commission
+     * @param int $currentBalance
      * @throws \Throwable
      */
-    public function createTransaction(int $userTransactionId, $commission)
+    public function create(int $userTransactionId, int $commission, int $currentBalance): void
     {
-        $currentBalance = $this->getCurrentBalance();
-
         $systemTransaction = new SystemTransaction();
         $systemTransaction->user_transaction_id = $userTransactionId;
         $systemTransaction->amount = $commission;
@@ -23,9 +23,9 @@ class SystemTransService
     }
 
     /**
-     * @return int|mixed
+     * @return int
      */
-    private function getCurrentBalance()
+    public function getCurrentBalance(): int
     {
         $objectSystemTransaction = SystemTransaction::orderBy('id', 'desc')->lockForUpdate()->first();
 

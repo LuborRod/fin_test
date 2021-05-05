@@ -2,19 +2,29 @@
 
 namespace App\Http\Controllers\Api\Transaction;
 
-use App\DTO\TransactionDTO;
+use App\Contracts\DTO\Transaction\ITransactionData;
+use App\Contracts\Services\Calculation\ICalculationService;
+use App\Contracts\Services\TransferFunds\ITransferFundsService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TransactionRequest;
-use App\Services\TransferFundsService;
 use Illuminate\Http\JsonResponse;
 
 class TransactionController extends Controller
 {
-    private TransferFundsService $transferFundsService;
+    private ITransferFundsService $transferFundsService;
+    private ICalculationService $calculationService;
+    private ITransactionData $transactionData;
 
-    public function __construct(TransferFundsService $transferFundsService)
+    public function __construct(
+        ITransferFundsService $transferFundsService,
+        ICalculationService $calculationService,
+        ITransactionData $transactionData
+    )
+
     {
         $this->transferFundsService = $transferFundsService;
+        $this->calculationService = $calculationService;
+        $this->transactionData = $transactionData;
     }
 
     /**
@@ -24,14 +34,16 @@ class TransactionController extends Controller
      */
     public function store(TransactionRequest $transactionRequest): JsonResponse
     {
-        $transactionData = new TransactionDTO(
+        $amount = $this->calculationService->convertBtcToSatoshi($transactionRequest->input('amount'));
+
+        $this->transactionData->create(
             $transactionRequest->input('sender_wallet'),
             $transactionRequest->input('receiver_wallet'),
-            (int)($transactionRequest->input('amount') * $this->transferFundsService::FORMAT_BTC_TO_SATOSHI),
-            $transactionRequest->input('commission_payer'),
+            $amount,
+            $transactionRequest->input('commission_payer')
         );
 
-        $this->transferFundsService->createOperation($transactionData);
+        $this->transferFundsService->createOperation($this->transactionData);
 
         return response()->json('OK', 201);
     }

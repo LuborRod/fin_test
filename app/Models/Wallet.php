@@ -27,6 +27,8 @@ class Wallet extends Model
 {
     use HasFactory;
 
+    public const START_CURRENT_BALANCE = 1000000000;
+
     public $timestamps = false;
 
     /**
@@ -47,7 +49,7 @@ class Wallet extends Model
      * @var array
      */
     protected $attributes = [
-        'current_balance' => 100000000,
+        'current_balance' => self::START_CURRENT_BALANCE,
     ];
 
 
