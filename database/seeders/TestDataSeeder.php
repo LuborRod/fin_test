@@ -53,7 +53,7 @@ class TestDataSeeder extends Seeder
         foreach ($userIds as $userId) {
             $wallet = new Wallet;
             $wallet->user_id = $userId;
-            $wallet->current_balance = 100000000;
+            $wallet->current_balance = Wallet::START_CURRENT_BALANCE;
             $wallet->hash = $hashes[$i];
             $wallet->save();
             $i++;
