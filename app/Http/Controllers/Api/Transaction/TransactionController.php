@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers\Api\Transaction;
 
-use App\Contracts\DTO\Transaction\ITransactionData;
 use App\Contracts\Services\Calculation\ICalculationService;
-use App\Contracts\Services\TransferFunds\ITransferFundsService;
+use App\DTO\Transaction\TransactionData;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Transaction\TransactionRequest;
+use App\Services\TransferFunds\TransferFundsService;
 use Illuminate\Http\JsonResponse;
 
 class TransactionController extends BaseController
 {
-    private ITransferFundsService $transferFundsService;
+    private TransferFundsService $transferFundsService;
     private ICalculationService $calculationService;
-    private ITransactionData $transactionData;
+    private TransactionData $transactionData;
 
     public function __construct(
-        ITransferFundsService $transferFundsService,
+        TransferFundsService $transferFundsService,
         ICalculationService $calculationService,
-        ITransactionData $transactionData
+        TransactionData $transactionData
     )
 
     {
@@ -28,8 +28,80 @@ class TransactionController extends BaseController
     }
 
     /**
+     * @OA\Info(
+     *   title="Transfer Funds  API",
+     *   version="1.0.0",
+     *   @OA\Contact(
+     *     email="r.liuborets@andersenlab.com"
+     *   )
+     * ),
+     * @OA\Post(
+     *     path="/transactions",
+     *     summary="Create new transaction",
+     *     tags={"Transactions"},
+     *     @OA\Parameter(
+     *         name="sender_wallet",
+     *         in="path",
+     *         description="Hash of sender`s wallet",
+     *         required=true,
+     *    @OA\Schema(
+     *      type="string",
+     *       ),
+     *     ),
+     *     @OA\Parameter(
+     *         name="receiver_wallet",
+     *         in="path",
+     *         description="Hash of receiver`s wallet",
+     *         required=true,
+     *    @OA\Schema(
+     *      type="string",
+     *       ),
+     *     ),
+     *     @OA\Parameter(
+     *         name="amount",
+     *         in="path",
+     *         description="Amount in BTC",
+     *         required=true,
+     *    @OA\Schema(
+     *      type="integer",
+     *      ),
+     *     ),
+     *     @OA\Parameter(
+     *         name="commission_payer",
+     *         in="path",
+     *         description="You can choose wallet, which will pay comission. 1(default) - sender, 2 - receiver",
+     *         required=false,
+     *    @OA\Schema(
+     *      type="integer",
+     *       ),
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Created",
+     *         @OA\Schema(
+     *             type="json",
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not found",
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Method Not Allowed",
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *     ),
+     * )
      * @param TransactionRequest $transactionRequest
      * @return JsonResponse
+     * @throws \Throwable
      */
     public function store(TransactionRequest $transactionRequest): JsonResponse
     {

@@ -3,8 +3,8 @@
 
 namespace App\Services\Calculation;
 
-use App\Contracts\DTO\TransferSums\ITransferSumsData;
 use App\Contracts\Services\Calculation\ICalculationService;
+use App\DTO\TransferSums\TransferSumsData;
 use App\Models\UsersTransaction;
 use App\Services\BaseService;
 use Money\Currency;
@@ -17,10 +17,10 @@ class CalculationService extends BaseService implements ICalculationService
 
     private Money $amount;
     private Money $commission;
-    private ITransferSumsData $transferSumsData;
+    private TransferSumsData $transferSumsData;
 
 
-    public function __construct(ITransferSumsData $transferSumsData)
+    public function __construct(TransferSumsData $transferSumsData)
     {
         $this->transferSumsData = $transferSumsData;
     }
@@ -41,10 +41,10 @@ class CalculationService extends BaseService implements ICalculationService
 
     /**
      * @param int $commissionPayer
-     * @return ITransferSumsData
+     * @return TransferSumsData
      * @throws \Exception
      */
-    public function getSumsForTransfer(int $commissionPayer): ITransferSumsData
+    public function getSumsForTransfer(int $commissionPayer): TransferSumsData
     {
         switch ($commissionPayer) {
             case UsersTransaction::COMMISSION_PAYER_SENDER:

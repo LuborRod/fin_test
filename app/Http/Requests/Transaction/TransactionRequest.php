@@ -7,9 +7,6 @@ use App\Models\UsersTransaction;
 use App\Repositories\Wallet\WalletRepository;
 use App\Rules\CommissionPayerRule;
 use App\Rules\WalletHashRule;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class TransactionRequest extends AbstractRequest
 {

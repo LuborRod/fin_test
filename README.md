@@ -23,7 +23,7 @@ After `make init` you will have 4 business_logic tables.
 After `make init` you will get 3 users and 6 wallets to transfer funds between. All wallets have 1 000 000 000 'Satoshi'(10 BTC).
    
 Minimal amount for transfer  - 0.00000001. 
-Maximal amount for transfer  - 1000. 
+Maximal amount for transfer  - 10000. 
    
 You can modify it in 'UserTransaction' constants.   
    
@@ -55,7 +55,7 @@ I skipped `creating user/top-up wallet`. If I did this in real life, I would als
 But you gave me several clean hours for this task, that's why some moments are missed.
 
 P.S 2
-    For clean architecture we have to use interfaces in constructors. Logging was also skipped. I wrote commentaries.Table `wallet` has custom field `hash`. I made it only for speed development.
+    Logging was also skipped. I wrote commentaries.Table `wallet` has custom field `hash`. I made it only for speed development.
 This would be relevant if the application was pulled from the outside in order to hide the real `ids`.
 Or we can use JWT tokens for 'hiding' data. In the future, I can make free transfers between wallets that belong to the same user.Depends on project).
 For your convenience I delete .env from .gitignore). Own custom exceptions for every case are also welcome.)

@@ -3,11 +3,10 @@
 namespace App\Services\UsersTransactions;
 
 use App\Contracts\Repositories\UsersTransactions\IUsersTransactionsRepository;
-use App\Contracts\Services\UsersTransactions\IUsersTransService;
 use App\Models\UsersTransaction;
 use App\Services\BaseService;
 
-class UsersTransService extends BaseService implements IUsersTransService
+class UsersTransService extends BaseService
 {
     private IUsersTransactionsRepository $usersTransactionsRepository;
 

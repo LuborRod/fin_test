@@ -11,12 +11,11 @@ class ValidationRequestException extends \Exception
     public function __construct(array $errors = [])
     {
         parent::__construct('', JsonResponse::HTTP_BAD_REQUEST);
-        $this->errors= $errors;
+        $this->errors = $errors;
     }
 
     public function getErrors(): array
     {
         return $this->errors;
     }
-
 }

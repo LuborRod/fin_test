@@ -1,0 +1,79 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Transfer Funds  API",
+        "contact": {
+            "email": "r.liuborets@andersenlab.com"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/transactions": {
+            "post": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Create new transaction",
+                "operationId": "App\\Http\\Controllers\\Api\\Transaction\\TransactionController::store",
+                "parameters": [
+                    {
+                        "name": "sender_wallet",
+                        "in": "path",
+                        "description": "Hash of sender`s wallet",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "receiver_wallet",
+                        "in": "path",
+                        "description": "Hash of receiver`s wallet",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "amount",
+                        "in": "path",
+                        "description": "Amount in BTC",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "commission_payer",
+                        "in": "path",
+                        "description": "You can choose wallet, which will pay comission. 1(default) - sender, 2 - receiver",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "405": {
+                        "description": "Method Not Allowed"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        }
+    },
+    "security": [
+        []
+    ]
+}

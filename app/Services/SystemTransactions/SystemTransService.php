@@ -3,10 +3,9 @@
 namespace App\Services\SystemTransactions;
 
 use App\Contracts\Repositories\SystemTransactions\ISystemTransactionsRepository;
-use App\Contracts\Services\SystemTransactions\ISystemTransService;
 use App\Services\BaseService;
 
-class SystemTransService extends BaseService implements ISystemTransService
+class SystemTransService extends BaseService
 {
     private ISystemTransactionsRepository $systemTransactionsRepository;
 
