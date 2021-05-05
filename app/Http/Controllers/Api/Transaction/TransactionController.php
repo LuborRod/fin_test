@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Api\Transaction;
 use App\Contracts\DTO\Transaction\ITransactionData;
 use App\Contracts\Services\Calculation\ICalculationService;
 use App\Contracts\Services\TransferFunds\ITransferFundsService;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\TransactionRequest;
+use App\Http\Controllers\BaseController;
+use App\Http\Requests\Transaction\TransactionRequest;
 use Illuminate\Http\JsonResponse;
 
-class TransactionController extends Controller
+class TransactionController extends BaseController
 {
     private ITransferFundsService $transferFundsService;
     private ICalculationService $calculationService;
@@ -30,7 +30,6 @@ class TransactionController extends Controller
     /**
      * @param TransactionRequest $transactionRequest
      * @return JsonResponse
-     * @throws \Throwable
      */
     public function store(TransactionRequest $transactionRequest): JsonResponse
     {
@@ -45,6 +44,6 @@ class TransactionController extends Controller
 
         $this->transferFundsService->createOperation($this->transactionData);
 
-        return response()->json('OK', 201);
+        return $this->success(self::CREATED, JsonResponse::HTTP_CREATED);
     }
 }

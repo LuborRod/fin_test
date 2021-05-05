@@ -61,4 +61,4 @@ php-script:
 	docker-compose run --rm php-cli php artisan $(arg)
 
 fill-test-data:
-	docker-compose run --rm php-cli php artisan fill:testData
+	docker-compose run --rm php-cli php artisan db:seed

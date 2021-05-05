@@ -63,7 +63,7 @@ class CalculationService extends BaseService implements ICalculationService
                 break;
             default:
                 //Log somewhere
-                throw new \Exception();
+                throw new \LogicException();
         }
 
         return $this->transferSumsData;

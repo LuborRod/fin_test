@@ -51,7 +51,7 @@ class TransferFundsService extends BaseService implements ITransferFundsService
 
             if ($senderWallet === null || $receiverWallet === null) {
                 // Log Reason Somewhere
-                throw new \Exception();
+                throw new \LogicException();
             }
 
             $this->calculationService->setAmountAndCommissionObjects($transactionData->amount);

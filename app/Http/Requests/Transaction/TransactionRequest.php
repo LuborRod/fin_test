@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Transaction;
 
+use App\Http\Requests\AbstractRequest;
 use App\Models\UsersTransaction;
 use App\Repositories\Wallet\WalletRepository;
 use App\Rules\CommissionPayerRule;
@@ -10,7 +11,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class TransactionRequest extends FormRequest
+class TransactionRequest extends AbstractRequest
 {
     /**
      * We skip this check. Look to README.
@@ -39,13 +40,5 @@ class TransactionRequest extends FormRequest
             'amount' => "required|numeric|between:$minTransactionAmount,$maxTransactionAmount",
             'commission_payer' => ['integer', new CommissionPayerRule]
         ];
-    }
-
-    /**
-     * @param Validator $validator
-     */
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json(['errors' => $validator->errors()], 422));
     }
 }
