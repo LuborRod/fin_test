@@ -32,10 +32,10 @@ class TransactionRequest extends AbstractRequest
         $maxTransactionAmount = UsersTransaction::MAX_AMOUNT_FOR_TRANSFER;
 
         return [
-            'sender_wallet' => ['required', new WalletHashRule($walletRepository)],
-            'receiver_wallet' => ['required','different:sender_wallet', new WalletHashRule($walletRepository)],
+            'senderWalletHash' => ['required', new WalletHashRule($walletRepository)],
+            'receiverWalletHash' => ['required','different:sender_wallet', new WalletHashRule($walletRepository)],
             'amount' => "required|numeric|between:$minTransactionAmount,$maxTransactionAmount",
-            'commission_payer' => ['integer', new CommissionPayerRule]
+            'commissionPayer' => ['integer', new CommissionPayerRule]
         ];
     }
 }

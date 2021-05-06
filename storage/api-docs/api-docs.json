@@ -8,51 +8,25 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/transactions": {
+        "/api/transactions": {
             "post": {
                 "tags": [
                     "Transactions"
                 ],
-                "summary": "Create new transaction",
-                "operationId": "App\\Http\\Controllers\\Api\\Transaction\\TransactionController::store",
-                "parameters": [
-                    {
-                        "name": "sender_wallet",
-                        "in": "path",
-                        "description": "Hash of sender`s wallet",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "receiver_wallet",
-                        "in": "path",
-                        "description": "Hash of receiver`s wallet",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "amount",
-                        "in": "path",
-                        "description": "Amount in BTC",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "commission_payer",
-                        "in": "path",
-                        "description": "You can choose wallet, which will pay comission. 1(default) - sender, 2 - receiver",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
+                "summary": "Create transaction",
+                "description": "Create transaction for transfer funds",
+                "operationId": "createTransaction",
+                "requestBody": {
+                    "description": "Created transaction",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TransactionData"
+                            }
                         }
                     }
-                ],
+                },
                 "responses": {
                     "201": {
                         "description": "Created"
@@ -69,6 +43,32 @@
                     "500": {
                         "description": "Server error"
                     }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "TransactionData": {
+                "properties": {
+                    "senderWalletHash": {
+                        "type": "string"
+                    },
+                    "receiverWalletHash": {
+                        "type": "string"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "commissionPayer": {
+                        "type": "integer",
+                        "nullable": true
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "TransactionData"
                 }
             }
         }

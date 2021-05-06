@@ -4,11 +4,30 @@ namespace App\DTO\Transaction;
 
 use App\Models\UsersTransaction;
 
+/**
+ * @OA\Schema(@OA\Xml(name="TransactionData"))
+ */
 class TransactionData
 {
+    /**
+     * @OA\Property()
+     * @var string
+     */
     private string $senderWalletHash;
+    /**
+     * @OA\Property()
+     * @var string
+     */
     private string $receiverWalletHash;
+    /**
+     * @OA\Property()
+     * @var int|float
+     */
     private int $amount;
+    /**
+     * @OA\Property()
+     * @var int
+     */
     private ?int $commissionPayer;
 
     public function create(string $senderWalletHash, string $receiverWalletHash, int $amount, ?int $commissionPayer): void

@@ -35,46 +35,19 @@ class TransactionController extends BaseController
      *     email="r.liuborets@andersenlab.com"
      *   )
      * ),
-     * @OA\Post(
-     *     path="/transactions",
-     *     summary="Create new transaction",
-     *     tags={"Transactions"},
-     *     @OA\Parameter(
-     *         name="sender_wallet",
-     *         in="path",
-     *         description="Hash of sender`s wallet",
-     *         required=true,
-     *    @OA\Schema(
-     *      type="string",
-     *       ),
-     *     ),
-     *     @OA\Parameter(
-     *         name="receiver_wallet",
-     *         in="path",
-     *         description="Hash of receiver`s wallet",
-     *         required=true,
-     *    @OA\Schema(
-     *      type="string",
-     *       ),
-     *     ),
-     *     @OA\Parameter(
-     *         name="amount",
-     *         in="path",
-     *         description="Amount in BTC",
-     *         required=true,
-     *    @OA\Schema(
-     *      type="integer",
-     *      ),
-     *     ),
-     *     @OA\Parameter(
-     *         name="commission_payer",
-     *         in="path",
-     *         description="You can choose wallet, which will pay comission. 1(default) - sender, 2 - receiver",
-     *         required=false,
-     *    @OA\Schema(
-     *      type="integer",
-     *       ),
-     *     ),
+     * @OA\Post(path="/api/transactions",
+     *   tags={"Transactions"},
+     *   summary="Create transaction",
+     *   description="Create transaction for transfer funds",
+     *   operationId="createTransaction",
+     *   @OA\RequestBody(
+     *       required=true,
+     *       description="Created transaction",
+     *       @OA\MediaType(
+     *           mediaType="multipart/form-data",
+     *           @OA\Schema(ref="#/components/schemas/TransactionData")
+     *       )
+     *   ),
      *     @OA\Response(
      *         response=201,
      *         description="Created",
@@ -98,20 +71,22 @@ class TransactionController extends BaseController
      *         response=500,
      *         description="Server error",
      *     ),
+     *
      * )
      * @param TransactionRequest $transactionRequest
      * @return JsonResponse
      * @throws \Throwable
+     * )
      */
     public function store(TransactionRequest $transactionRequest): JsonResponse
     {
         $amount = $this->calculationService->convertBtcToSatoshi($transactionRequest->input('amount'));
 
         $this->transactionData->create(
-            $transactionRequest->input('sender_wallet'),
-            $transactionRequest->input('receiver_wallet'),
+            $transactionRequest->input('senderWalletHash'),
+            $transactionRequest->input('receiverWalletHash'),
             $amount,
-            $transactionRequest->input('commission_payer')
+            $transactionRequest->input('commissionPayer')
         );
 
         $this->transferFundsService->createOperation($this->transactionData);
