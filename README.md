@@ -47,7 +47,7 @@ PARAMS:
 4. `commission_payer`(optional) -> integer. You can choose, who will pay for commission.
 It can be `1 => sender`, `2 => receiver`. Default - 1(sender).
 
-
+You can use SWAGGER-UI for testing. Host - `http://localhost/api/documentation`.
 
 P.S 
     I know about API Authentication by tokens.I missed it for speed. Also, I didn't open 443 port for HTTPS.
@@ -55,7 +55,7 @@ I skipped `creating user/top-up wallet`. If I did this in real life, I would als
 But you gave me several clean hours for this task, that's why some moments are missed.
 
 P.S 2
-    Logging was also skipped. I wrote commentaries.Table `wallet` has custom field `hash`. I made it only for speed development.
+    Table `wallet` has custom field `hash`. I made it only for speed development.
 This would be relevant if the application was pulled from the outside in order to hide the real `ids`.
 Or we can use JWT tokens for 'hiding' data. In the future, I can make free transfers between wallets that belong to the same user.Depends on project).
-For your convenience I delete .env from .gitignore). Own custom exceptions for every case are also welcome.)
+For your convenience I delete .env from .gitignore). 

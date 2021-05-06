@@ -38,7 +38,6 @@ class WalletService extends BaseService implements IWalletService
     public function checkSenderWalletForWriteOff(Wallet $senderWallet, int $writeOffSum): void
     {
         if (!$this->calculationService->ifEnoughFunds($senderWallet->current_balance, $writeOffSum)) {
-            // Log Reason Somewhere
             throw new BadRequestHttpException('Sender don`t have enough funds for transfer');
         }
     }

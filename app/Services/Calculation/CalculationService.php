@@ -62,8 +62,7 @@ class CalculationService extends BaseService implements ICalculationService
                 );
                 break;
             default:
-                //Log somewhere
-                throw new \LogicException();
+                throw new \LogicException('Commission payer is undetermined');
         }
 
         return $this->transferSumsData;

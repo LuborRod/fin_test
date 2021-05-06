@@ -11,6 +11,7 @@ use App\Services\BaseService;
 use App\Services\SystemTransactions\SystemTransService;
 use App\Services\UsersTransactions\UsersTransService;
 use Illuminate\Database\DatabaseManager as Db;
+use Psr\Log\LoggerInterface;
 
 class TransferFundsService extends BaseService
 {
@@ -19,13 +20,15 @@ class TransferFundsService extends BaseService
     private UsersTransService $usersTransService;
     private IWalletService $walletService;
     private Db $db;
+    private LoggerInterface $logger;
 
     public function __construct(
         UsersTransService $usersTransService,
         SystemTransService $systemTransService,
         ICalculationService $calculationService,
         IWalletService $walletService,
-        Db $db
+        Db $db,
+        LoggerInterface $logger
     )
     {
         $this->usersTransService = $usersTransService;
@@ -33,6 +36,7 @@ class TransferFundsService extends BaseService
         $this->calculationService = $calculationService;
         $this->walletService = $walletService;
         $this->db = $db;
+        $this->logger = $logger;
     }
 
     /**
@@ -41,15 +45,15 @@ class TransferFundsService extends BaseService
      */
     public function createOperation(TransactionData $transactionData): void
     {
-        $this->db->beginTransaction();
-
         try {
+
+            $this->db->beginTransaction();
+
             $senderWallet = $this->walletService->getWalletByHash($transactionData->getSenderWalletHash());
             $receiverWallet = $this->walletService->getWalletByHash($transactionData->getReceiverWalletHash());
 
             if ($senderWallet === null || $receiverWallet === null) {
-                // Log Reason Somewhere
-                throw new \LogicException();
+                throw new \LogicException('Wallet is unavailable');
             }
 
             $this->calculationService->setAmountAndCommissionObjects($transactionData->getAmount());
@@ -63,7 +67,7 @@ class TransferFundsService extends BaseService
 
         } catch (\Exception $e) {
             $this->db->rollBack();
-            // Log Reason Somewhere
+            $this->logger->alert($e->getMessage());
             throw $e;
         }
     }
