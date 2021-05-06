@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Services\Calculation;
 
 use App\Contracts\Services\Calculation\ICalculationService;

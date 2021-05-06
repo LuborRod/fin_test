@@ -49,6 +49,8 @@ It can be `1 => sender`, `2 => receiver`. Default - 1(sender).
 
 You can use SWAGGER-UI for testing. Host - `http://localhost/api/documentation`.
 
+Also you can run tests - `make test`
+
 P.S 
     I know about API Authentication by tokens.I missed it for speed. Also, I didn't open 443 port for HTTPS.
 I skipped `creating user/top-up wallet`. If I did this in real life, I would also add different currencies to wallets.

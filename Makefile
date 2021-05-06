@@ -25,7 +25,8 @@ api-init: api-composer-install \
 		  api-config-clear \
 		  api-cache-clear \
 	      api-init-migrations \
-	      fill-test-data
+	      fill-test-data \
+	      test
 
 api-composer-install:
 	docker-compose run --rm php-cli composer install
@@ -62,3 +63,5 @@ php-script:
 
 fill-test-data:
 	docker-compose run --rm php-cli php artisan db:seed
+test:
+	docker-compose run --rm php-cli php artisan test

@@ -80,7 +80,9 @@ class TransactionController extends BaseController
      */
     public function store(TransactionRequest $transactionRequest): JsonResponse
     {
-        $amount = $this->calculationService->convertBtcToSatoshi($transactionRequest->input('amount'));
+        $amount = $this->calculationService->convertBtcToSatoshi(
+            $transactionRequest->input('amount')
+        );
 
         $this->transactionData->create(
             $transactionRequest->input('senderWalletHash'),
