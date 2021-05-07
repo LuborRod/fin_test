@@ -33,7 +33,7 @@ class TransactionRequest extends AbstractRequest
 
         return [
             'senderWalletHash' => ['required', new WalletHashRule($walletRepository)],
-            'receiverWalletHash' => ['required','different:sender_wallet', new WalletHashRule($walletRepository)],
+            'receiverWalletHash' => ['required','different:senderWalletHash', new WalletHashRule($walletRepository)],
             'amount' => "required|numeric|between:$minTransactionAmount,$maxTransactionAmount",
             'commissionPayer' => ['integer', new CommissionPayerRule]
         ];
