@@ -1,4 +1,7 @@
 init: docker-down-clear docker-pull docker-build docker-up api-init
+init-db: api-init-migrations \
+         fill-test-data \
+         test
 up: docker-up
 down: docker-down
 restart: down up
@@ -24,9 +27,6 @@ api-init: api-composer-install \
 		  api-change-mode-storage \
 		  api-config-clear \
 		  api-cache-clear \
-	      api-init-migrations \
-	      fill-test-data \
-	      test
 
 api-composer-install:
 	docker-compose run --rm php-cli composer install

@@ -6,11 +6,12 @@ You have to be installed `docker && docker-compose && make`.
 Also, you should have free ports - 3306, 80. If you can`t free these ports, you have to change it manually in docker-compose.yml
 
 - CLone this repository from github
-- Run `make init` from root directory and wait for magic)
+- Run `make init` 
+- Run `make init-db` 
 
 ------------DOCUMENTATION--------------
 
-After `make init` you will have 4 business_logic tables. 
+After `make init-db` you will have 4 business_logic tables. 
 1. users (default table)
    
 2. wallets (users can have a lot of wallets)
@@ -20,7 +21,7 @@ After `make init` you will have 4 business_logic tables.
 4. system_transactions (Here we will store commission balance).
 
 1) Upon application start the database should be populated with sample data - 
-After `make init` you will get 3 users and 6 wallets to transfer funds between. All wallets have 1 000 000 000 'Satoshi'(10 BTC).
+After `make init-db` you will get 3 users and 6 wallets to transfer funds between. All wallets have 1 000 000 000 'Satoshi'(10 BTC).
    
 Minimal amount for transfer  - 0.00000001. 
 Maximal amount for transfer  - 10000. 
@@ -41,10 +42,10 @@ These hashes(every wallet has unique hash) you need to make POST requests to api
 Method: POST
 Request URL: http://localhost/api/transactions
 PARAMS:
-1. `sender_wallet` => hash(above) -> string 
-2. `receiver_wallet` => hash(above) -> string
+1. `senderWalletHash` => hash(above) -> string 
+2. `receiverWalletHash` => hash(above) -> string
 3. `amount` => sum for transfer -> integer|float. BTC
-4. `commission_payer`(optional) -> integer. You can choose, who will pay for commission.
+4. `commissionPayer`(optional) -> integer. You can choose, who will pay for commission.
 It can be `1 => sender`, `2 => receiver`. Default - 1(sender).
 
 You can use SWAGGER-UI for testing. Host - `http://localhost/api/documentation`.
